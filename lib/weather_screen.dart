@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-
 import 'additional_Info_Items.dart';
 import 'hourly_forecast_item.dart';
 import 'package:http/http.dart' as http;
