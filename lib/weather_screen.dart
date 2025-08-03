@@ -17,29 +17,29 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
-
+  TextEditingController _cityController = TextEditingController(text: 'Pune');
   late Future<Map<String, dynamic>> weather;
-  Future<Map<String, dynamic>> getCurrentWeather() async{
-    try{
-      String cityname = 'Pune';
-      final res = await http.get(Uri.parse('http://api.openweathermap.org/data/2.5/forecast?q=$cityname&APPID=$openWeatherAPIKey')
-      );
+
+  Future<Map<String, dynamic>> getCurrentWeather(String cityName) async {
+    try {
+      final res = await http.get(Uri.parse(
+        'http://api.openweathermap.org/data/2.5/forecast?q=$cityName&APPID=$openWeatherAPIKey',
+      ));
       final data = jsonDecode(res.body);
 
-      if(data['cod']!='200'){
-        throw 'An unexpected error occured';
+      if (data['cod'] != '200') {
+        throw 'City not found or API error';
       }
-  return data;
-       // data['list'][0]['main']['temp'];
-
-
-    }catch(e){
+      return data;
+    } catch (e) {
       throw e.toString();
     }
-    }
-    @override
+  }
+
+  @override
   void initState() {
     super.initState();
+    weather = getCurrentWeather(_cityController.text);
   }
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
        ],
       ),
       body: FutureBuilder(
-        future:getCurrentWeather() ,
+        future: weather,
         builder: (context,snapshot) {
           print(snapshot);
           if(snapshot.connectionState == ConnectionState.waiting){
@@ -82,6 +82,33 @@ class _WeatherScreenState extends State<WeatherScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _cityController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter city name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        weather = getCurrentWeather(_cityController.text);
+                      });
+                    },
+                    child: Text('Search'),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+
               SizedBox(
                 width: double.infinity,
                 child: Card(
@@ -196,6 +223,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
       ),
     );
   }
+  @override
+  void dispose() {
+    _cityController.dispose();
+    super.dispose();
+  }
+
 }
 
 
