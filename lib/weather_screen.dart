@@ -130,11 +130,20 @@ class _WeatherScreenState extends State<WeatherScreen> {
                           ),
             
                         SizedBox(height: 10,),
-            
-                              Icon(currentSky == 'Clouds'|| currentSky == 'Rain'
-                                  ?Icons.cloud
-                                  :Icons.sunny,
-                                size: 64,),
+
+                              Icon(
+                                currentSky == 'Rain'
+                                    ? Icons.cloudy_snowing
+                                    : currentSky == 'Clouds'
+                                    ? Icons.cloud
+                                    : Icons.wb_sunny,
+                                size: 64,
+                              ),
+
+                              // Icon(currentSky == 'Clouds'|| currentSky == 'Rain'
+                              //     ?Icons.cloud
+                              //     :Icons.sunny,
+                              //   size: 64,),
             
                               SizedBox(height: 10,),
             
@@ -171,13 +180,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
                         return HourlyForecastItem(
             
                             time: DateFormat.Hm().format(time),
-            
-                          icon: hourlyForecast['weather'][0]['main'] == 'Clouds'
-                              ||
-                              hourlyForecast['weather'][0]['main'] == 'Rain'
+
+                          icon: hourlyForecast['weather'][0]['main'] == 'Rain'
+                              ? Icons.cloudy_snowing
+                              : hourlyForecast['weather'][0]['main'] == 'Clouds'
                               ? Icons.cloud
-                              : Icons.sunny,
-            
+                              : Icons.wb_sunny,
+
+                          // icon: hourlyForecast['weather'][0]['main'] == 'Clouds'
+                          //     ||
+                          //     hourlyForecast['weather'][0]['main'] == 'Rain'
+                          //     ? Icons.cloud
+                          //     : Icons.sunny,
+
                           temp: '$hourlyTempCelsius °C',
                         );
             
